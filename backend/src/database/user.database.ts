@@ -7,7 +7,7 @@ class UserDatabase {
   private secret_token = process.env.TOKEN_SECRET;
   async findAllUsers(): Promise<User[]> {
     const query = `
-        SELECT uuid, username
+        SELECT uuid, username, userType
         FROM application_user
       `;
     const { rows } = await db.query<User>(query);
@@ -17,7 +17,7 @@ class UserDatabase {
   async findUserById(uuid: string): Promise<User> {
     try {
       const query = `
-        SELECT uuid, username
+        SELECT uuid, username, userType
         FROM application_user
         WHERE uuid = $1
       `;
