@@ -1,7 +1,7 @@
 import { Pool } from "pg";
+import "dotenv/config";
 
-const connectionString =
-  "postgres://mjsandof:4Exdovqyd7QYlsZ3TfZ2qy5ZkcKYuFcY@drona.db.elephantsql.com/mjsandof";
+const connectionString = process.env.PG_URI;
 const db = new Pool({ connectionString });
 
 export default db;

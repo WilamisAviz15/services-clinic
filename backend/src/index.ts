@@ -1,20 +1,16 @@
 import express from "express";
 import errorHandler from "./middlewares/error-handler.middleware";
 import usersRoute from "./routes/user.route";
-import authRoute from "./routes/authorization.route";
+import authRoute from "./routes/auth.route";
+import loginRoute from "./routes/login.route";
 
 const app = express();
-
+const PORT = process.env.LOCAL_PORT;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/test", (req, res) => {
-  res.status(201).send("ok");
-});
-
-app.use(usersRoute);
-app.use(authRoute);
-
+app.use(loginRoute);
+app.use(authRoute, usersRoute);
 app.use(errorHandler);
 
-app.listen(3000, () => console.log("Running on port 3000"));
+app.listen(PORT, () => console.log(`Running on port ${PORT}`));
