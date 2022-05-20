@@ -1,8 +1,10 @@
-import db from "../db";
+import db from "./db";
 import User from "../models/user.model";
 import DatabaseError from "./errors/database.error";
+import "dotenv/config";
 
 class UserDatabase {
+  private secret_token = process.env.TOKEN_SECRET;
   async findAllUsers(): Promise<User[]> {
     const query = `
         SELECT uuid, username
@@ -34,10 +36,10 @@ class UserDatabase {
             username,
             password
         )
-        VALUES ($1, crypt($2, 'secret'))
+        VALUES ($1, crypt($2, $3))
         RETURNING uuid
       `;
-    const values = [user.username, user.password];
+    const values = [user.username, user.password, this.secret_token];
     const { rows } = await db.query<{ uuid: string }>(script, values);
     const [newUser] = rows;
     return newUser.uuid;
@@ -48,10 +50,10 @@ class UserDatabase {
         UPDATE application_user 
         SET
             username = $1,
-            password = crypt($2, 'secret')
-        WHERE uuid = $3
+            password = crypt($2, $3)
+        WHERE uuid = $4
       `;
-    const values = [user.username, user.password, user.uuid];
+    const values = [user.username, user.password, this.secret_token, user.uuid];
     await db.query(script, values);
   }
 
@@ -63,6 +65,29 @@ class UserDatabase {
       `;
     const values = [uuid];
     await db.query(script, values);
+  }
+
+  async findByUsernameAndPassword(
+    username: string,
+    password: string
+  ): Promise<User | null> {
+    try {
+      const query = `
+            SELECT uuid, username
+            FROM application_user
+            WHERE username = $1
+            AND password = crypt($2, $3)
+        `;
+      const values = [username, password, this.secret_token];
+      const { rows } = await db.query<User>(query, values);
+      const [user] = rows;
+      return user || null;
+    } catch (error) {
+      throw new DatabaseError(
+        "Erro na consulta por username e password",
+        error
+      );
+    }
   }
 }
 
