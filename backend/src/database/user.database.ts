@@ -34,12 +34,18 @@ class UserDatabase {
     const script = `
         INSERT INTO application_user (
             username,
-            password
+            password,
+            userType
         )
-        VALUES ($1, crypt($2, $3))
+        VALUES ($1, crypt($2, $3), $4)
         RETURNING uuid
       `;
-    const values = [user.username, user.password, this.secret_token];
+    const values = [
+      user.username,
+      user.password,
+      this.secret_token,
+      user.userType,
+    ];
     const { rows } = await db.query<{ uuid: string }>(script, values);
     const [newUser] = rows;
     return newUser.uuid;
