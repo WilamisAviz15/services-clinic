@@ -5,11 +5,11 @@ import MedicalAppointment from "../models/medical.appointment.model";
 class MedicalAppointmentDatabase {
   async findAllMedicalAppointments(): Promise<MedicalAppointment[]> {
     const query = `
-    SELECT ma.uuid, u.username usernameUser, ms.name nameMedicalService, ms.value valueMedicalService, 
-    ms.duration durationMedicalService
+    SELECT ma.uuid, u.username patient_name, ms.name speciality, ms.value value_to_paid, 
+    ms.duration duration
     FROM application_user u 
-    INNER JOIN application_medical_appointment ma ON u.uuid= ma.userId
-    INNER JOIN application_medical_services ms ON ma.medicalServiceId = ms.uuid
+    INNER JOIN application_medical_appointment ma ON u.uuid= ma.user_id
+    INNER JOIN application_medical_services ms ON ma.medical_service_id = ms.uuid
       `;
     const { rows } = await db.query<MedicalAppointment>(query);
     return rows || [];
@@ -21,8 +21,8 @@ class MedicalAppointmentDatabase {
     const query = `
     SELECT ma.uuid, u.username, ms.name, ms.value, ms.duration
     FROM application_user u 
-    INNER JOIN application_medical_appointment ma ON u.uuid= ma.userId
-    INNER JOIN application_medical_services ms ON ma.medicalServiceId = ms.uuid
+    INNER JOIN application_medical_appointment ma ON u.uuid= ma.user_id
+    INNER JOIN application_medical_services ms ON ma.medical_service_id = ms.uuid
     WHERE u.uuid = $1
       `;
     const values = [uuid];
@@ -32,7 +32,7 @@ class MedicalAppointmentDatabase {
 
   async create(medicalAppointment: MedicalAppointment): Promise<string> {
     const script = `
-    INSERT INTO application_medical_appointment(userId, medicalServiceId) 
+    INSERT INTO application_medical_appointment(user_id, medical_service_id) 
         VALUES ($1, $2)
         RETURNING uuid
       `;
@@ -49,8 +49,8 @@ class MedicalAppointmentDatabase {
     const script = `
         UPDATE application_medical_appointment 
         SET
-            userId = $1,
-            medicalServiceId = $2,
+            user_id = $1,
+            medical_service_id = $2,
         WHERE uuid = $3
       `;
     const values = [
