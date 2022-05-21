@@ -6,7 +6,7 @@ class MedicalAppointmentDatabase {
   async findAllMedicalAppointments(): Promise<MedicalAppointment[]> {
     const query = `
     SELECT ma.uuid, u.username patient_name, ms.name speciality, ms.value value_to_paid, 
-    ms.duration duration
+    ms.duration
     FROM application_user u 
     INNER JOIN application_medical_appointment ma ON u.uuid= ma.user_id
     INNER JOIN application_medical_services ms ON ma.medical_service_id = ms.uuid
@@ -19,7 +19,7 @@ class MedicalAppointmentDatabase {
     uuid: string
   ): Promise<MedicalAppointment[]> {
     const query = `
-    SELECT ma.uuid, u.username, ms.name, ms.value, ms.duration
+    SELECT ma.uuid, u.username patient_name, ms.name speciality, ms.value value_to_paid, ms.duration 
     FROM application_user u 
     INNER JOIN application_medical_appointment ma ON u.uuid= ma.user_id
     INNER JOIN application_medical_services ms ON ma.medical_service_id = ms.uuid
