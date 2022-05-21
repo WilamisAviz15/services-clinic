@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -12,11 +13,13 @@ import { AutenticationComponent } from './account/autentication/autentication.co
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
+import { MainComponent } from './pages/main/main.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, AutenticationComponent],
+  declarations: [AppComponent, LoginComponent, AutenticationComponent, MainComponent],
   imports: [
     BrowserModule,
+    HttpClientModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatCardModule,

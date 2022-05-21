@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
-interface UserLogin {
-  mail: string;
-  password: string;
-}
+import { Router } from '@angular/router';
+import { UserLogin, AccountService } from 'src/app/shared/account.service';
 
 @Component({
   selector: 'app-login',
@@ -11,12 +8,24 @@ interface UserLogin {
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-  constructor() {}
+  constructor(private accountService: AccountService, private router: Router) {}
   user: UserLogin = {
-    mail: '',
+    username: '',
     password: '',
   };
   ngOnInit(): void {}
 
-  onSubmit() {}
+  onSubmit() {
+    console.log(this.user);
+    this.accountService.login(this.user).subscribe({
+      next: (key) => {
+        console.log('res:', key);
+        if (key) {
+          window.localStorage.setItem('authorization-token', key);
+          this.accountService.getUserByToken();
+          setTimeout(() => this.router.navigate(['']), 10);
+        }
+      },
+    });
+  }
 }
