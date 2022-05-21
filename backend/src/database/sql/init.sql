@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS application_user(
     uuid uuid DEFAULT uuid_generate_v4(),
     username VARCHAR NOT NULL,
     password VARCHAR NOT NULL,
-    userType VARCHAR NOT NULL,
+    user_type VARCHAR NOT NULL,
     PRIMARY KEY (uuid)
 )
 
