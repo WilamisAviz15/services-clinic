@@ -3,6 +3,7 @@ type MedicalServices = {
   name: string;
   value: string;
   duration: number;
+  date: string;
   doctorId: string;
 };
 
