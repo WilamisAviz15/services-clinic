@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS application_medical_services(
     name VARCHAR NOT NULL,
     value VARCHAR NOT NULL,
     duration INT NOT NULL,
+    date VARCHAR NOT NULL,
     doctor_id uuid,
     PRIMARY KEY (uuid),
     FOREIGN KEY (doctor_id) REFERENCES "application_doctor" (uuid)
@@ -39,6 +40,7 @@ CREATE TABLE IF NOT EXISTS application_medical_appointment(
 
 INSERT INTO application_user(username, password, userType) VALUES ('admin', crypt('admin', 'secret'), 'administrador')
 INSERT INTO application_doctor(name, scholarity, balance_to_receive) VALUES ('Dr. Ave Maria', 'Doutor em Medicina', '5000.00')
-INSERT INTO application_medical_services(name, value, duration, doctor_id) VALUES ('Clinico Geral', '60.00', 10, 'ab27a220-8f8a-4032-99ff-f1b5a4b84425')
+INSERT INTO application_medical_services(name, value, duration,date, doctor_id) VALUES ('Clinico Geral', '60.00', 10,
+'Sat May 21 2022 11:42:43 GMT-0300 (Brasilia Standard Time)', 'ab27a220-8f8a-4032-99ff-f1b5a4b84425')
 INSERT INTO application_medical_appointment(user_id, medical_service_id) 
 VALUES ('f90bf00e-c06e-4f36-89ea-298e93a085e7', '51115469-3238-4bb8-a874-03480564d4c2')

@@ -5,7 +5,7 @@ import MedicalServices from "../models/medical.services.model";
 class MedicalServicesDatabase {
   async findAllMedicalServices(): Promise<MedicalServices[]> {
     const query = `
-    select ms.uuid, ms.name speciality, ms.value, ms.duration, d.name doctor_name, d.scholarity from application_medical_services ms inner join application_doctor d on ms.doctor_id = d.uuid
+    select ms.uuid, ms.name speciality, ms.value, ms.duration, ms.date, d.name doctor_name, d.scholarity from application_medical_services ms inner join application_doctor d on ms.doctor_id = d.uuid
       `;
     const { rows } = await db.query<MedicalServices>(query);
     return rows || [];
@@ -14,15 +14,16 @@ class MedicalServicesDatabase {
   async create(medicalService: MedicalServices): Promise<string> {
     const script = `
         INSERT INTO application_medical_services (
-            name, value, duration, doctor_id
+            name, value, duration, date, doctor_id
         )
-        VALUES ($1, $2,$3, $4)
+        VALUES ($1, $2, $3, $4, $5)
         RETURNING uuid
       `;
     const values = [
       medicalService.name,
       medicalService.value,
       medicalService.duration,
+      medicalService.date,
       medicalService.doctorId,
     ];
     const { rows } = await db.query<{ uuid: string }>(script, values);
@@ -37,13 +38,15 @@ class MedicalServicesDatabase {
             name = $1,
             value = $2,
             duration = $3,
-            doctor_id = $4
-        WHERE uuid = $5
+            date = $4
+            doctor_id = $5
+        WHERE uuid = $6
       `;
     const values = [
       medicalService.name,
       medicalService.value,
       medicalService.duration,
+      medicalService.date,
       medicalService.doctorId,
       medicalService.uuid,
     ];
