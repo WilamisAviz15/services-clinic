@@ -25,6 +25,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ConfirmationDialogComponent } from './pages/main/dialog-appointment/confirmation-dialog/confirmation-dialog.component';
+import { AppointmentsComponent } from './pages/appointments/appointments.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { ConfirmationDialogComponent } from './pages/main/dialog-appointment/con
     DialogAppointmentComponent,
     SnackBarComponent,
     ConfirmationDialogComponent,
+    AppointmentsComponent,
   ],
   imports: [
     BrowserModule,
