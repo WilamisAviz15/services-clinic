@@ -9,6 +9,9 @@ import { LoginComponent } from './account/login/login.component';
 import { MainComponent } from './pages/main/main.component';
 import { DialogAppointmentComponent } from './pages/main/dialog-appointment/dialog-appointment.component';
 import { SnackBarComponent } from './shared/snack-bar/snack-bar.component';
+import { ConfirmationDialogComponent } from './pages/main/dialog-appointment/confirmation-dialog/confirmation-dialog.component';
+import { AppointmentsComponent } from './pages/appointments/appointments.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 import { MatCardModule } from '@angular/material/card';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -24,8 +27,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { ConfirmationDialogComponent } from './pages/main/dialog-appointment/confirmation-dialog/confirmation-dialog.component';
-import { AppointmentsComponent } from './pages/appointments/appointments.component';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
@@ -37,6 +39,7 @@ import { AppointmentsComponent } from './pages/appointments/appointments.compone
     SnackBarComponent,
     ConfirmationDialogComponent,
     AppointmentsComponent,
+    ProfileComponent,
   ],
   imports: [
     BrowserModule,
@@ -57,6 +60,7 @@ import { AppointmentsComponent } from './pages/appointments/appointments.compone
     MatDatepickerModule,
     MatNativeDateModule,
     MatSnackBarModule,
+    MatSlideToggleModule,
   ],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }],
   bootstrap: [AppComponent],

@@ -1,3 +1,4 @@
+import { ProfileComponent } from './pages/profile/profile.component';
 import { AppointmentsComponent } from './pages/appointments/appointments.component';
 import { AuthGuard } from './shared/auth/auth.guard';
 import { NgModule } from '@angular/core';
@@ -16,6 +17,11 @@ const routes: Routes = [
   {
     path: 'appointment',
     component: AppointmentsComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent,
     canActivate: [AuthGuard],
   },
   {

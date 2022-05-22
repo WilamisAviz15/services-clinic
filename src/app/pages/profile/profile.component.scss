@@ -1,0 +1,46 @@
+.header {
+  flex: 1 1 auto;
+}
+
+.container {
+  max-width: 900px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 20px 70px 0;
+}
+a {
+  text-decoration: none;
+  color: #fff;
+}
+
+a:hover {
+  cursor: pointer;
+}
+
+mat-card {
+  margin-bottom: 10px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+.container__register-schedule {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+mat-card-content {
+  padding-top: 10px;
+}
+
+.admin {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.admin-label {
+  font-size: 14px;
+  margin-right: 10px;
+}
