@@ -1,3 +1,4 @@
+import { UtilService } from './../../shared/services/util.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {
@@ -11,7 +12,11 @@ import {
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-  constructor(private accountService: AccountService, private router: Router) {}
+  constructor(
+    private accountService: AccountService,
+    private router: Router,
+    private utilService: UtilService
+  ) {}
   user: UserLogin = {
     username: '',
     password: '',
@@ -29,6 +34,7 @@ export class LoginComponent implements OnInit {
           setTimeout(() => this.router.navigate(['']), 10);
         }
       },
+      error: (err) => this.utilService.sendNotificationBySnackBar(err.error),
     });
   }
 }
