@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 import * as express from 'express';
 import userDatabase from '../database/user.database';
-import forbiddenError from '../database/errors/forbidden.error';
 import { StatusCodes } from 'http-status-codes';
 
 const secret_token = process.env.TOKEN_SECRET;
@@ -14,7 +13,7 @@ loginRoute.post('/', async (req, res) => {
   );
 
   if (!user) {
-    throw new forbiddenError('Usuário ou senha inválidos!');
+    return res.status(401).json('Usuário ou senhas inválidos!');
   }
 
   const jwtPayload = { username: user.username };
