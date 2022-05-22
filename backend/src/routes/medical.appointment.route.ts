@@ -1,11 +1,11 @@
-import { Router, Request, Response, NextFunction } from "express";
-import { StatusCodes } from "http-status-codes";
-import medicalAppointmentDatabase from "../database/medical.appointment.database";
+import { Router, Request, Response, NextFunction } from 'express';
+import { StatusCodes } from 'http-status-codes';
+import medicalAppointmentDatabase from '../database/medical.appointment.database';
 
 const medicalAppointmentRoute = Router();
 
 medicalAppointmentRoute.get(
-  "/medicalAppointment",
+  '/medicalAppointment',
   async (req: Request, res: Response, next: NextFunction) => {
     const medicalAppointments =
       await medicalAppointmentDatabase.findAllMedicalAppointments();
@@ -14,7 +14,7 @@ medicalAppointmentRoute.get(
 );
 
 medicalAppointmentRoute.get(
-  "/medicalAppointment/:uuid",
+  '/medicalAppointment/:uuid',
   async (req: Request<{ uuid: string }>, res: Response, next: NextFunction) => {
     try {
       const uuid = req.params.uuid;
@@ -28,16 +28,24 @@ medicalAppointmentRoute.get(
 );
 
 medicalAppointmentRoute.post(
-  "/medicalAppointment",
+  '/medicalAppointment',
   async (req: Request<{ uuid: string }>, res: Response, next: NextFunction) => {
-    const newMedicalAppointment = req.body;
-    const uuid = await medicalAppointmentDatabase.create(newMedicalAppointment);
-    res.status(StatusCodes.CREATED).send(uuid);
+    const newMedicalAppointment = req.body.appointment;
+    try {
+      const uuid = await medicalAppointmentDatabase.create(
+        newMedicalAppointment
+      );
+      res
+        .status(StatusCodes.CREATED)
+        .json({ message: 'Marcação feita com sucesso!' });
+    } catch (error) {
+      next(error);
+    }
   }
 );
 
 medicalAppointmentRoute.put(
-  "/medicalAppointment/:uuid",
+  '/medicalAppointment/:uuid',
   async (req: Request<{ uuid: string }>, res: Response, next: NextFunction) => {
     const uuid = req.params.uuid;
     const modifierMedicalAppointments = req.body;
@@ -49,11 +57,20 @@ medicalAppointmentRoute.put(
 );
 
 medicalAppointmentRoute.delete(
-  "/medicalAppointment/:uuid",
+  '/medicalAppointment/:uuid',
   async (req: Request<{ uuid: string }>, res: Response, next: NextFunction) => {
     const uuid = req.params.uuid;
     await medicalAppointmentDatabase.remove(uuid);
     res.sendStatus(StatusCodes.OK);
+  }
+);
+
+medicalAppointmentRoute.post(
+  '/medicalAppointment/deleteAllByUserId',
+  async (req: Request<{ uuid: string }>, res: Response, next: NextFunction) => {
+    const uuid = req.body.uuidUser;
+    await medicalAppointmentDatabase.removeAllByUserId(uuid);
+    res.status(200).json({ message: 'Consultas deletas com sucesso' });
   }
 );
 

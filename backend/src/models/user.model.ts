@@ -1,8 +1,6 @@
-type User = {
+export class User {
   uuid?: string;
-  username: string;
-  password?: string;
-  userType: string;
-};
-
-export default User;
+  username: string = '';
+  password?: string = '';
+  user_type: string = '';
+}

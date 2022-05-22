@@ -1,6 +1,6 @@
-import db from "./db";
-import "dotenv/config";
-import MedicalServices from "../models/medical.services.model";
+import db from './db';
+import 'dotenv/config';
+import MedicalServices from '../models/medical.services.model';
 
 class MedicalServicesDatabase {
   async findAllMedicalServices(): Promise<MedicalServices[]> {
@@ -8,6 +8,17 @@ class MedicalServicesDatabase {
     select ms.uuid, ms.name speciality, ms.value, ms.duration, ms.date, d.name doctor_name, d.scholarity from application_medical_services ms inner join application_doctor d on ms.doctor_id = d.uuid
       `;
     const { rows } = await db.query<MedicalServices>(query);
+    return rows || [];
+  }
+
+  async findAllMedicalServicesByDate(date: string): Promise<MedicalServices[]> {
+    const query = `
+    select ms.uuid, ms.name speciality, ms.value, ms.duration, ms.date, d.name doctor_name, d.scholarity from application_medical_services ms 
+    inner join application_doctor d on ms.doctor_id = d.uuid 
+    WHERE date = $1
+      `;
+    const values = [date];
+    const { rows } = await db.query<MedicalServices>(query, values);
     return rows || [];
   }
 
@@ -38,7 +49,7 @@ class MedicalServicesDatabase {
             name = $1,
             value = $2,
             duration = $3,
-            date = $4
+            date = $4,
             doctor_id = $5
         WHERE uuid = $6
       `;

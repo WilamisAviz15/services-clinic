@@ -1,15 +1,15 @@
-import db from "./db";
-import "dotenv/config";
-import MedicalAppointment from "../models/medical.appointment.model";
+import db from './db';
+import 'dotenv/config';
+import { MedicalAppointment } from '../models/medical.appointment.model';
 
 class MedicalAppointmentDatabase {
   async findAllMedicalAppointments(): Promise<MedicalAppointment[]> {
     const query = `
-    SELECT ma.uuid, u.username patient_name, ms.name speciality, ms.value value_to_paid, 
-    ms.duration
+    SELECT ma.uuid, u.username patient_name, ms.date,ms.name speciality,u.uuid user_id, d.name doctor, ms.value value_to_paid, ms.duration 
     FROM application_user u 
     INNER JOIN application_medical_appointment ma ON u.uuid= ma.user_id
     INNER JOIN application_medical_services ms ON ma.medical_service_id = ms.uuid
+    INNER JOIN application_doctor d on ms.doctor_id = d.uuid
       `;
     const { rows } = await db.query<MedicalAppointment>(query);
     return rows || [];
@@ -19,10 +19,11 @@ class MedicalAppointmentDatabase {
     uuid: string
   ): Promise<MedicalAppointment[]> {
     const query = `
-    SELECT ma.uuid, u.username patient_name, ms.name speciality, ms.value value_to_paid, ms.duration 
+    SELECT ma.uuid, u.username patient_name, u.uuid user_id, ms.name speciality, d.name doctor, ms.value value_to_paid, ms.duration 
     FROM application_user u 
     INNER JOIN application_medical_appointment ma ON u.uuid= ma.user_id
     INNER JOIN application_medical_services ms ON ma.medical_service_id = ms.uuid
+    INNER JOIN application_doctor d on ms.doctor_id = d.uuid
     WHERE u.uuid = $1
       `;
     const values = [uuid];
@@ -37,8 +38,8 @@ class MedicalAppointmentDatabase {
         RETURNING uuid
       `;
     const values = [
-      medicalAppointment.userId,
-      medicalAppointment.medicalServiceId,
+      medicalAppointment.user_id,
+      medicalAppointment.medical_service_id,
     ];
     const { rows } = await db.query<{ uuid: string }>(script, values);
     const [newmedicalAppointment] = rows;
@@ -54,8 +55,8 @@ class MedicalAppointmentDatabase {
         WHERE uuid = $3
       `;
     const values = [
-      medicalAppointment.userId,
-      medicalAppointment.medicalServiceId,
+      medicalAppointment.user_id,
+      medicalAppointment.medical_service_id,
       medicalAppointment.uuid,
     ];
     await db.query(script, values);
@@ -66,6 +67,16 @@ class MedicalAppointmentDatabase {
         DELETE 
         FROM application_medical_appointment 
         WHERE uuid = $1
+      `;
+    const values = [uuid];
+    await db.query(script, values);
+  }
+
+  async removeAllByUserId(uuid: string): Promise<void> {
+    const script = `
+      DELETE 
+      FROM application_medical_appointment 
+      WHERE user_id = $1
       `;
     const values = [uuid];
     await db.query(script, values);

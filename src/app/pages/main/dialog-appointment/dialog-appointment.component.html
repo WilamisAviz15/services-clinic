@@ -1,0 +1,53 @@
+<mat-dialog-content class="mat-typography dialog-dates">
+  <h2>Preencha as informações abaixo para realizar a marcação</h2>
+  <mat-form-field>
+    <mat-label>Selecione a data</mat-label>
+    <input
+      [(ngModel)]="selectedDate"
+      matInput
+      [matDatepicker]="picker"
+      (ngModelChange)="loadingAppointments($event)"
+    />
+    <mat-hint>DD/MM/AAAA</mat-hint>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Selecione o tipo de consulta</mat-label>
+    <mat-select
+      [(ngModel)]="selectedAppointment"
+      name="appointment"
+      #appointment
+      [disabled]="!selectedDate"
+    >
+      <mat-option
+        *ngFor="let appointment of appointments"
+        [value]="appointment"
+      >
+        {{ appointment.speciality }} - {{ appointment.doctor_name }} -
+        {{ appointment.duration }}min - R$
+        {{ appointment.value.replace(".", ",") }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field *ngIf="this.data.editing">
+    <mat-label>Selecione a data</mat-label>
+    <input [(ngModel)]="selectedDate" matInput [matDatepicker]="picker" />
+    <mat-hint>DD/MM/YYYY</mat-hint>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <button
+    mat-raised-button
+    color="primary"
+    class="btn"
+    (click)="this.data.editing ? updateAppointment() : addAppointment()"
+    [disabled]="selectedAppointment == undefined"
+  >
+    {{ this.data.editing ? "Editar consulta" : "Cadastrar consulta" }}
+  </button>
+  <button mat-stroked-button color="primary" mat-dialog-close class="btn">
+    Cancelar
+  </button>
+</mat-dialog-content>
