@@ -1,13 +1,13 @@
-import db from "./db";
-import User from "../models/user.model";
-import DatabaseError from "./errors/database.error";
-import "dotenv/config";
+import db from './db';
+import DatabaseError from './errors/database.error';
+import 'dotenv/config';
+import { User } from '../models/user.model';
 
 class UserDatabase {
   private secret_token = process.env.TOKEN_SECRET;
   async findAllUsers(): Promise<User[]> {
     const query = `
-        SELECT uuid, username, user_type
+        SELECT uuid, username, user_type 
         FROM application_user
       `;
     const { rows } = await db.query<User>(query);
@@ -17,7 +17,7 @@ class UserDatabase {
   async findUserById(uuid: string): Promise<User> {
     try {
       const query = `
-        SELECT uuid, username, user_type
+        SELECT uuid, username, user_type 
         FROM application_user
         WHERE uuid = $1
       `;
@@ -26,7 +26,7 @@ class UserDatabase {
       const [user] = rows;
       return user;
     } catch (error) {
-      throw new DatabaseError("Erro na consulta por ID", error);
+      throw new DatabaseError('Erro na consulta por ID', error);
     }
   }
 
@@ -44,7 +44,7 @@ class UserDatabase {
       user.username,
       user.password,
       this.secret_token,
-      user.userType,
+      user.user_type,
     ];
     const { rows } = await db.query<{ uuid: string }>(script, values);
     const [newUser] = rows;
@@ -56,10 +56,17 @@ class UserDatabase {
         UPDATE application_user 
         SET
             username = $1,
-            password = crypt($2, $3)
-        WHERE uuid = $4
+            password = crypt($2, $3),
+            user_type = $4
+        WHERE uuid = $5
       `;
-    const values = [user.username, user.password, this.secret_token, user.uuid];
+    const values = [
+      user.username,
+      user.password,
+      this.secret_token,
+      user.user_type,
+      user.uuid,
+    ];
     await db.query(script, values);
   }
 
@@ -90,7 +97,7 @@ class UserDatabase {
       return user || null;
     } catch (error) {
       throw new DatabaseError(
-        "Erro na consulta por username e password",
+        'Erro na consulta por username e password',
         error
       );
     }

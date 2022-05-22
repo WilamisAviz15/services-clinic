@@ -15,10 +15,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 app.use(loginRoute);
-app.use(authRoute, usersRoute);
-app.use(authRoute, medicalServicesRoute);
-app.use(authRoute, medicalAppointmentRoute);
-app.use(authRoute, doctorRoute);
+app.use(usersRoute);
+app.use(medicalServicesRoute);
+app.use(medicalAppointmentRoute);
+app.use(doctorRoute);
 app.use(errorHandler);
 
 app.listen(PORT, () => console.log(`Running on port ${PORT}`));

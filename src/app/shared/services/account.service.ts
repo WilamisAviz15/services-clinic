@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, take } from 'rxjs';
+import { User } from 'backend/src/models/user.model';
+import { map, Observable, take } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 export interface UserLogin {
@@ -39,6 +40,12 @@ export class AccountService {
       })
       .pipe(take(1))
       .subscribe((u) => window.localStorage.setItem('username', u));
+  }
+
+  getUser(username: string): Observable<User[]> {
+    return this.http
+      .get<User[]>(`${environment.api}/users/`)
+      .pipe(map((users) => users.filter((user) => user.username == username)));
   }
 
   logout() {
