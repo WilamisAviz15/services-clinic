@@ -69,12 +69,26 @@ export class MainComponent implements OnInit {
     }
   }
 
-  openDialog(editing?: boolean) {
+  removeAppointment(index?: number): void {
+    if (index != undefined) {
+      console.log(this.appointments.data[index]);
+      this.dialogAppointmentService.deleteAppointment(
+        this.appointments.data[index].uuid as string
+      );
+    } else {
+      this.appointments.data = [];
+      this.dialogAppointmentService.deleteAllAppointments(
+        this.user.uuid as string
+      );
+    }
+  }
+
+  openDialog(editing?: boolean, currentAppointment?: medicalServicesDetails) {
     this.dialog
       .open(DialogAppointmentComponent, {
         data: {
           editing: editing,
-          // currentMeal: currentMeal,
+          currentAppointment: currentAppointment,
           userId: this.user.uuid,
         },
       })
@@ -83,7 +97,7 @@ export class MainComponent implements OnInit {
       .subscribe((response) => {
         if (response) {
           console.log(response);
-          if (editing) {
+          if (editing && currentAppointment) {
             // currentMeal.mealDate = response.mealDate;
             // currentMeal.mealType = response.mealType;
             // this.dialogScheduleService.updateSchedule(currentMeal);
@@ -106,10 +120,7 @@ export class MainComponent implements OnInit {
       .pipe(take(1))
       .subscribe((response) => {
         console.log(response);
-        if (response)
-          this.dialogAppointmentService.deleteAllAppointments(
-            this.user.uuid as string
-          );
+        if (response) this.removeAppointment(idx);
       });
   }
 }

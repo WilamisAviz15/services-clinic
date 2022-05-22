@@ -58,9 +58,27 @@ export class DialogAppointmentService {
       uuidUser: uuidUser,
     };
     this.http
-      .post(`${environment.api}/medicalAppointment/deleteAllByUserId/`, req)
+      .delete(
+        `${environment.api}/medicalAppointment/deleteAllByUserId/${uuidUser}`
+      )
       .pipe(take(1))
-      .subscribe();
+      .subscribe((res) => {
+        const response = res as Message;
+        this.getAllAppointments();
+        this.utilService.sendNotificationBySnackBar(response.message);
+      });
+  }
+
+  deleteAppointment(uuidAppointment: string) {
+    console.log(uuidAppointment);
+    this.http
+      .delete(`${environment.api}/medicalAppointment/${uuidAppointment}`)
+      .pipe(take(1))
+      .subscribe((res) => {
+        const response = res as Message;
+        this.getAllAppointments();
+        this.utilService.sendNotificationBySnackBar(response.message);
+      });
   }
 
   getAllAppointments(): BehaviorSubject<medicalServicesDetails[]> {
