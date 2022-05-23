@@ -1,27 +1,79 @@
 # ServicesClinic
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.2.6.
+# BACKEND 
 
-## Development server
+Para executar o backend é necessário ter o node instalado.
+O backend da aplicação foi feito utilizando Nodejs e express.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Executando o servidor
+Instale as dependencias:
+`npm i`
+Execute o servidor do backend:
+`npm run dev`
 
-## Code scaffolding
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+# FRONTEND 
+Este projeto foi gerado com [Angular CLI](https://github.com/angular/angular-cli) v 13.2.6.
 
-## Build
+## Executando o servidor de desenvolvimento
+Instale as dependencias:
+`npm i`
+Execute o servidor do frontend:
+`ng serve`
+Navegue até `http://localhost:4200/`. 
+O aplicativo será recarregado automaticamente se você alterar qualquer um dos arquivos de origem.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-## Running unit tests
+# Banco de Dados
+Foi utilizado o postgresql através do ElephantSQL. Esse modelo é uma Cloud PostgreSQL, sendo um metodo gerenciado de banco de dados na Cloud. Toda a configuração já está feita, basta apenas utilizar o sistema.
+É possível fazer requisições através do Postman ou insomnia, utilizando a URL `http://localhost:3000/` informando a rota que deseja.
+Requisições disponíveis da API:
+ ## Usuário
+ 
+| Método | URL                               | Descrição                 |
+|--------|-----------------------------------|---------------------------|
+| GET    | http://localhost:3000/users/      | Obter todos os usuário    |
+| POST   | http://localhost:3000/users/      | Adicionar novo usuário    |
+| PUT    | http://localhost:3000/users/:uuid | Atualizar usuário pelo ID |
+| DELETE | http://localhost:3000/users/:uuid | Deletar usuário pelo ID   |
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Running end-to-end tests
+## Login
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+| Método | URL                               | Descrição                 |
+|--------|-----------------------------------|---------------------------|
+| POST   | http://localhost:3000/            | Validar login             |
 
-## Further help
+## Serviços Médicos
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+| Método | URL                                         | Descrição                        |
+|--------|---------------------------------------------|----------------------------------|
+| GET    | http://localhost:3000/medicalServices/      | Obter todos os serviços médicos  |
+| POST   | http://localhost:3000/medicalServices/      | Adicionar novo serviço médico    |
+| PUT    | http://localhost:3000/medicalServices/:uuid | Atualizar serviço médico pelo ID |
+| DELETE | http://localhost:3000/medicalServices/:uuid | Deletar serviço médico pelo ID   |
+| POST   | medicalServices/medicalServicesByDate       | Buscar pela data                 |
+
+## Atendimento Médico
+
+| Método | URL                                                 | Descrição                             |
+|--------|-----------------------------------------------------|---------------------------------------|
+| GET    | http://localhost:3000/medicalAppointment/           | Obter todos os atendimentos médicos   |
+| GET    | http://localhost:3000/medicalAppointment/:uuid      | todos os atendimentos médicos por id  |
+| GET    | http://localhost:3000/medicalAppointment/byCPF/:cpf | todos os atendimentos médicos por cpf |
+| POST   | http://localhost:3000/medicalAppointment/           | Adicionar novo atendimento médico     |
+| PUT    | http://localhost:3000/medicalAppointment/:uuid      | Atualizar atendimento médico pelo ID  |
+| DELETE | http://localhost:3000/medicalAppointment/:uuid      | Deletar atendimento médico pelo ID    |
+
+## Médicos
+
+| Método | URL                                                | Descrição                         |
+|--------|----------------------------------------------------|-----------------------------------|
+| GET    | http://localhost:3000/doctors/                     | Obter todos os médicos            |
+| GET    | http://localhost:3000/doctors/:uuid                | Obter médico por id               |
+| POST   | http://localhost:3000/doctors/                     | Adicionar novo médico             |
+| PUT    | http://localhost:3000/doctors/:uuid                | Atualizar médico pelo ID          |
+| PUT    | http://localhost:3000/doctors/valueToReceive/:uuid | Atualizar valor a receber pelo ID |
+| DELETE | http://localhost:3000/doctors/:uuid                | Deletar médico pelo ID            |
+
+Também é possível rodar o banco localmente. Basta pegar o arquivo `backend/database/sql/init.sql`. Ele contêm todas as querys com criação das tabelas e inserções.
