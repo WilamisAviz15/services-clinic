@@ -1,7 +1,7 @@
-import db from "./db";
-import DatabaseError from "./errors/database.error";
-import "dotenv/config";
-import Doctor from "../models/doctor.model";
+import db from './db';
+import DatabaseError from './errors/database.error';
+import 'dotenv/config';
+import Doctor from '../models/doctor.model';
 
 class DoctorDatabase {
   async findAllDoctors(): Promise<Doctor[]> {
@@ -25,7 +25,7 @@ class DoctorDatabase {
       const [doctor] = rows;
       return doctor;
     } catch (error) {
-      throw new DatabaseError("Erro na consulta por ID", error);
+      throw new DatabaseError('Erro na consulta por ID', error);
     }
   }
 
@@ -35,7 +35,7 @@ class DoctorDatabase {
         VALUES ($1, $2, $3)
         RETURNING uuid
       `;
-    const values = [doctor.name, doctor.scholarity, doctor.balanceToReceive];
+    const values = [doctor.name, doctor.scholarity, doctor.balance_to_receive];
     const { rows } = await db.query<{ uuid: string }>(script, values);
     const [newDoctor] = rows;
     return newDoctor.uuid;
@@ -48,6 +48,16 @@ class DoctorDatabase {
         WHERE uuid = $3
       `;
     const values = [doctor.name, doctor.scholarity, doctor.uuid];
+    await db.query(script, values);
+  }
+
+  async updateValueToReceive(doctor: Doctor): Promise<void> {
+    const script = `
+        UPDATE application_doctor 
+        SET balance_to_receive = $1
+        WHERE uuid = $2
+      `;
+    const values = [doctor.balance_to_receive, doctor.uuid];
     await db.query(script, values);
   }
 

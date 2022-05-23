@@ -12,8 +12,10 @@ export interface medicalServicesDetails {
   user_id?: string;
   speciality: string;
   doctor_name: string;
+  doctor_id?: string;
   value: string;
   duration: number;
+  scholarity?: string;
   date: string;
 }
 
@@ -22,7 +24,7 @@ export interface medicalServicesDetails {
 })
 export class DialogAppointmentService {
   constructor(private http: HttpClient, private utilService: UtilService) {}
-  schedules$ = new BehaviorSubject<medicalServicesDetails[]>([]);
+  appointments$ = new BehaviorSubject<medicalServicesDetails[]>([]);
 
   searchMedicalServicesByDate(
     date: string
@@ -30,7 +32,6 @@ export class DialogAppointmentService {
     const req = {
       date: date,
     };
-    console.log(date);
     return this.http
       .post<medicalServicesDetails[]>(
         `${environment.api}/medicalServices/medicalServicesByDate`,
@@ -70,7 +71,6 @@ export class DialogAppointmentService {
   }
 
   deleteAppointment(uuidAppointment: string) {
-    console.log(uuidAppointment);
     this.http
       .delete(`${environment.api}/medicalAppointment/${uuidAppointment}`)
       .pipe(take(1))
@@ -85,11 +85,10 @@ export class DialogAppointmentService {
     this.http
       .get(`${environment.api}/medicalAppointment`)
       .pipe(take(1))
-      .subscribe((schedules) => {
-        this.schedules$.next(schedules as medicalServicesDetails[]);
+      .subscribe((appointments) => {
+        this.appointments$.next(appointments as medicalServicesDetails[]);
       });
-    console.log(this.schedules$.getValue());
-    return this.schedules$;
+    return this.appointments$;
   }
 
   returnIndex(

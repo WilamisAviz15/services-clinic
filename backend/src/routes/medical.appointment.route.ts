@@ -27,6 +27,20 @@ medicalAppointmentRoute.get(
   }
 );
 
+medicalAppointmentRoute.get(
+  '/medicalAppointment/byCPF/:cpf',
+  async (req: Request<{ cpf: string }>, res: Response, next: NextFunction) => {
+    try {
+      const cpf = req.params.cpf;
+      const userMedicalAppointments =
+        await medicalAppointmentDatabase.findMedicalAppointmentsByUserCPF(cpf);
+      res.status(StatusCodes.OK).send(userMedicalAppointments);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 medicalAppointmentRoute.post(
   '/medicalAppointment',
   async (req: Request<{ uuid: string }>, res: Response, next: NextFunction) => {
@@ -60,7 +74,6 @@ medicalAppointmentRoute.delete(
   '/medicalAppointment/:uuid',
   async (req: Request<{ uuid: string }>, res: Response, next: NextFunction) => {
     const uuid = req.params.uuid;
-    console.log(uuid);
     await medicalAppointmentDatabase.remove(uuid);
     res
       .status(StatusCodes.OK)

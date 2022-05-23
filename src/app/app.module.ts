@@ -12,6 +12,9 @@ import { SnackBarComponent } from './shared/snack-bar/snack-bar.component';
 import { ConfirmationDialogComponent } from './pages/main/dialog-appointment/confirmation-dialog/confirmation-dialog.component';
 import { AppointmentsComponent } from './pages/appointments/appointments.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { DialogEmployeeComponent } from './pages/main/dialog-employee/dialog-employee.component';
+import { DialogInvoiceComponent } from './pages/main/dialog-invoice/dialog-invoice.component';
+import { RegisterComponent } from './account/register/register.component';
 
 import { MatCardModule } from '@angular/material/card';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -40,6 +43,9 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     ConfirmationDialogComponent,
     AppointmentsComponent,
     ProfileComponent,
+    DialogEmployeeComponent,
+    DialogInvoiceComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,

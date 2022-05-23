@@ -1,3 +1,4 @@
+import { DialogEmployeeComponent } from './dialog-employee/dialog-employee.component';
 import { Component, OnInit } from '@angular/core';
 import { User } from 'backend/src/models/user.model';
 import { combineLatest, Subject, take, takeUntil } from 'rxjs';
@@ -5,7 +6,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAppointmentComponent } from './dialog-appointment/dialog-appointment.component';
 import { AccountService } from 'src/app/shared/services/account.service';
-import { MedicalAppointment } from 'backend/src/models/medical.appointment.model';
 import { ConfirmationDialogComponent } from './dialog-appointment/confirmation-dialog/confirmation-dialog.component';
 import {
   DialogAppointmentService,
@@ -15,6 +15,11 @@ import {
 export enum CONFIRMATION_DIALOG_TYPE {
   DELETE_APPOINTMENT = 'Tem certeza que deseja cancelar a consulta?',
   DELETE_ALL_DELETE_APPOINTMENT = 'Tem certeza que deseja cancelar todas as consultas?',
+}
+
+export enum EMPLOYEE_DIALOG_TYPE {
+  CONFIRM_APPOINTMENT = 'confirmar consulta',
+  SHOW_ALL_APPOINTMENT = 'todas as consultas',
 }
 
 @Component({
@@ -32,13 +37,12 @@ export class MainComponent implements OnInit {
   appointments = new MatTableDataSource<medicalServicesDetails>();
   private destroy$ = new Subject<void>();
   title = CONFIRMATION_DIALOG_TYPE;
+  componentType = EMPLOYEE_DIALOG_TYPE;
   displayedColumns: string[] = [
     'id',
     'speciality',
     'date',
     'doctor',
-    'used',
-    'paid',
     'actions',
   ];
   ngOnDestroy(): void {
@@ -48,10 +52,8 @@ export class MainComponent implements OnInit {
 
   ngOnInit(): void {
     const token = this.accountService.getToken();
-    console.log('token:', token);
     const currentUser = window.localStorage.getItem('username');
     if (currentUser) {
-      console.log('current', currentUser);
       combineLatest([
         this.accountService.getUser(currentUser),
         this.dialogAppointmentService.getAllAppointments(),
@@ -59,11 +61,9 @@ export class MainComponent implements OnInit {
         .pipe(takeUntil(this.destroy$))
         .subscribe(([user, appointments]) => {
           this.user = user[0];
-          console.log(this.user);
           const filtereAppointments = appointments.filter(
             (a) => a.user_id == this.user.uuid
           );
-          console.log(filtereAppointments);
           this.appointments = new MatTableDataSource(filtereAppointments);
         });
     }
@@ -71,7 +71,6 @@ export class MainComponent implements OnInit {
 
   removeAppointment(index?: number): void {
     if (index != undefined) {
-      console.log(this.appointments.data[index]);
       this.dialogAppointmentService.deleteAppointment(
         this.appointments.data[index].uuid as string
       );
@@ -83,27 +82,16 @@ export class MainComponent implements OnInit {
     }
   }
 
-  openDialog(editing?: boolean, currentAppointment?: medicalServicesDetails) {
+  openDialog() {
     this.dialog
       .open(DialogAppointmentComponent, {
         data: {
-          editing: editing,
-          currentAppointment: currentAppointment,
           userId: this.user.uuid,
         },
       })
       .afterClosed()
       .pipe(take(1))
-      .subscribe((response) => {
-        if (response) {
-          console.log(response);
-          if (editing && currentAppointment) {
-            // currentMeal.mealDate = response.mealDate;
-            // currentMeal.mealType = response.mealType;
-            // this.dialogScheduleService.updateSchedule(currentMeal);
-          }
-        }
-      });
+      .subscribe();
   }
 
   openConfirmationDialog(idx?: number) {
@@ -119,8 +107,16 @@ export class MainComponent implements OnInit {
       .afterClosed()
       .pipe(take(1))
       .subscribe((response) => {
-        console.log(response);
         if (response) this.removeAppointment(idx);
       });
+  }
+
+  employeeDialog(type: EMPLOYEE_DIALOG_TYPE) {
+    this.dialog.open(DialogEmployeeComponent, {
+      data: {
+        user: this.user,
+        type: type,
+      },
+    });
   }
 }

@@ -24,10 +24,8 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {}
 
   onSubmit() {
-    console.log(this.user);
     this.accountService.login(this.user).subscribe({
       next: (key) => {
-        console.log('res:', key);
         if (key) {
           window.localStorage.setItem('authorization-token', key);
           this.accountService.getUserByToken();

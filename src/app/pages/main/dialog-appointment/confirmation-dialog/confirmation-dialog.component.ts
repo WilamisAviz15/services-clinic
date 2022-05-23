@@ -12,9 +12,7 @@ export class ConfirmationDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<ConfirmationDialogComponent>
   ) {}
 
-  ngOnInit(): void {
-    console.log(this.data);
-  }
+  ngOnInit(): void {}
 
   dismiss(response: boolean) {
     this.dialogRef.close(response);
