@@ -5,7 +5,7 @@ import { MedicalAppointment } from '../models/medical.appointment.model';
 class MedicalAppointmentDatabase {
   async findAllMedicalAppointments(): Promise<MedicalAppointment[]> {
     const query = `
-    SELECT ma.uuid, u.username patient_name, ms.date,ms.name speciality,u.uuid user_id, d.name doctor, ms.value value_to_paid, ms.duration 
+    SELECT ma.uuid, u.username patient_name, ms.date,ms.name speciality,u.uuid user_id, d.name doctor, ms.value, ms.duration 
     FROM application_user u 
     INNER JOIN application_medical_appointment ma ON u.uuid= ma.user_id
     INNER JOIN application_medical_services ms ON ma.medical_service_id = ms.uuid
@@ -27,6 +27,22 @@ class MedicalAppointmentDatabase {
     WHERE u.uuid = $1
       `;
     const values = [uuid];
+    const { rows } = await db.query<MedicalAppointment>(query, values);
+    return rows || [];
+  }
+
+  async findMedicalAppointmentsByUserCPF(
+    cpf: string
+  ): Promise<MedicalAppointment[]> {
+    const query = `
+    SELECT ma.uuid, u.username patient_name, u.uuid user_id, ms.name speciality, ms.date,d.uuid doctor_id, d.name doctor, d.scholarity, ms.value, ms.duration 
+    FROM application_user u 
+    INNER JOIN application_medical_appointment ma ON u.uuid= ma.user_id
+    INNER JOIN application_medical_services ms ON ma.medical_service_id = ms.uuid
+    INNER JOIN application_doctor d on ms.doctor_id = d.uuid
+    WHERE u.cpf = $1
+      `;
+    const values = [cpf];
     const { rows } = await db.query<MedicalAppointment>(query, values);
     return rows || [];
   }

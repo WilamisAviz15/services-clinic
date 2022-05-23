@@ -1,0 +1,52 @@
+<div class="container">
+  <div class="container__color"></div>
+  <div class="container__login">
+    <mat-card>
+      <form (ngSubmit)="onSubmit()" class="container__login__card">
+        <mat-form-field>
+          <mat-label>Usuário</mat-label>
+          <input
+            matInput
+            [(ngModel)]="user.username"
+            name="mail"
+            required="true"
+          />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Senha</mat-label>
+          <input
+            matInput
+            type="password"
+            [(ngModel)]="user.password"
+            name="password"
+            required="true"
+          />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>CPF</mat-label>
+          <input matInput [(ngModel)]="user.cpf" name="cpf" required="true" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Nome Completo</mat-label>
+          <input
+            matInput
+            [(ngModel)]="user.fullname"
+            name="fullname"
+            required="true"
+          />
+        </mat-form-field>
+        <button
+          mat-raised-button
+          color="primary"
+          class="btn"
+          [disabled]="disableSubmit()"
+        >
+          Criar cadastro
+        </button>
+      </form>
+      <button mat-stroked-button class="btn register" routerLink="/login">
+        Voltar para login
+      </button>
+    </mat-card>
+  </div>
+</div>

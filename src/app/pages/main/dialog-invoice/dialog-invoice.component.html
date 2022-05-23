@@ -1,0 +1,75 @@
+<mat-dialog-content class="mat-typography">
+  <h2>Recibo da consulta</h2>
+  <h4>
+    Aqui será detalhado os valores que o cliente pagou pelas consultas
+    realizadas e a comissão do respectivo médico
+  </h4>
+  <h3 class="title">Serviços consumidos pelo cliente</h3>
+  <table mat-table [dataSource]="appointments" class="large-table">
+    <ng-container matColumnDef="speciality">
+      <th mat-header-cell *matHeaderCellDef>Especialidade</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.speciality }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="duration">
+      <th mat-header-cell *matHeaderCellDef>Duração</th>
+      <td mat-cell *matCellDef="let element">{{ element.duration }} min</td>
+    </ng-container>
+
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef>Data</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.date }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="doctor">
+      <th mat-header-cell *matHeaderCellDef>Médico</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.doctor }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="value">
+      <th mat-header-cell *matHeaderCellDef>Valor</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.value.replace(".", ",") }}
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+  <div class="summary">
+    <h3>
+      Duração Total: <span>{{ duration }} minutos</span>
+    </h3>
+    <h3>
+      Valor Total: <span>R$ {{ ttl.replace(".", ",") }}</span>
+    </h3>
+  </div>
+
+  <h3 class="title">Valor a receber de cada respectivo médico</h3>
+  <h4>
+    O valor de comissão dos associados é de 10% em cima do valor da consulta
+  </h4>
+  <table mat-table [dataSource]="doctors" class="large-table">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Nome</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.name }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="value">
+      <th mat-header-cell *matHeaderCellDef>Valor a receber</th>
+      <td mat-cell *matCellDef="let element" class="toReceive">
+        {{ element.balance_to_receive.replace(".", ",") }}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumnsDoctors"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumnsDoctors"></tr>
+  </table>
+</mat-dialog-content>

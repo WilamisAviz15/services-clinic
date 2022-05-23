@@ -30,7 +30,6 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     const token = this.accountService.getToken();
-    console.log('token:', token);
     const currentUser = window.localStorage.getItem('username');
     if (currentUser) {
       this.accountService
@@ -38,7 +37,6 @@ export class ProfileComponent implements OnInit {
         .pipe(takeUntil(this.destroy$))
         .subscribe((u) => {
           this.user = u[0];
-          console.log(this.user);
           this.restoreInfoMyProfile();
         });
     }

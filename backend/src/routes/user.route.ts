@@ -28,9 +28,11 @@ usersRoute.get(
 usersRoute.post(
   '/users',
   async (req: Request<{ uuid: string }>, res: Response, next: NextFunction) => {
-    const newUser = req.body;
+    const newUser = req.body.user;
     const uuid = await userDatabase.create(newUser);
-    res.status(StatusCodes.CREATED).send(uuid);
+    res.status(StatusCodes.CREATED).json({
+      message: 'Usuário cadastrado com sucesso! Agora faça seu login',
+    });
   }
 );
 
@@ -39,7 +41,6 @@ usersRoute.put(
   async (req: Request<{ uuid: string }>, res: Response, next: NextFunction) => {
     const uuid = req.params.uuid;
     const modifierUser = req.body.user;
-
     modifierUser.uuid = uuid;
     await userDatabase.update(modifierUser);
     res

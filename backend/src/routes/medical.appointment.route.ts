@@ -27,6 +27,20 @@ medicalAppointmentRoute.get(
   }
 );
 
+medicalAppointmentRoute.get(
+  '/medicalAppointment/byCPF/:cpf',
+  async (req: Request<{ cpf: string }>, res: Response, next: NextFunction) => {
+    try {
+      const cpf = req.params.cpf;
+      const userMedicalAppointments =
+        await medicalAppointmentDatabase.findMedicalAppointmentsByUserCPF(cpf);
+      res.status(StatusCodes.OK).send(userMedicalAppointments);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 medicalAppointmentRoute.post(
   '/medicalAppointment',
   async (req: Request<{ uuid: string }>, res: Response, next: NextFunction) => {
@@ -61,16 +75,20 @@ medicalAppointmentRoute.delete(
   async (req: Request<{ uuid: string }>, res: Response, next: NextFunction) => {
     const uuid = req.params.uuid;
     await medicalAppointmentDatabase.remove(uuid);
-    res.sendStatus(StatusCodes.OK);
+    res
+      .status(StatusCodes.OK)
+      .json({ message: 'Consulta cancelada com sucesso' });
   }
 );
 
-medicalAppointmentRoute.post(
-  '/medicalAppointment/deleteAllByUserId',
+medicalAppointmentRoute.delete(
+  '/medicalAppointment/deleteAllByUserId/:uuid',
   async (req: Request<{ uuid: string }>, res: Response, next: NextFunction) => {
-    const uuid = req.body.uuidUser;
+    const uuid = req.params.uuid;
     await medicalAppointmentDatabase.removeAllByUserId(uuid);
-    res.status(200).json({ message: 'Consultas deletas com sucesso' });
+    res
+      .status(StatusCodes.OK)
+      .json({ message: 'Consultas canceladas com sucesso' });
   }
 );
 

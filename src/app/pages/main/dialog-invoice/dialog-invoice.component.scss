@@ -1,0 +1,41 @@
+mat-dialog-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.btn {
+  margin-bottom: 15px;
+}
+
+table {
+  width: 100%;
+  overflow-x: auto;
+}
+
+th {
+  align-items: center;
+  color: #000;
+}
+
+.mat-header-cell,
+.mat-cell {
+  text-align: center;
+}
+
+.title {
+  font-weight: bold;
+}
+
+.summary {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-top: 9px;
+  span {
+    font-weight: bold;
+  }
+}
+
+.toReceive {
+  font-weight: bold;
+}

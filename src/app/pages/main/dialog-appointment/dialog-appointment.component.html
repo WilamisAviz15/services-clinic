@@ -12,31 +12,39 @@
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
-  <mat-form-field>
+  <mat-form-field class="appointment_type">
     <mat-label>Selecione o tipo de consulta</mat-label>
-    <mat-select
-      [(ngModel)]="selectedAppointment"
-      name="appointment"
-      #appointment
-      [disabled]="!selectedDate"
-    >
+    <mat-select [(ngModel)]="selectedAppointment" [disabled]="!selectedDate">
       <mat-option
         *ngFor="let appointment of appointments"
         [value]="appointment"
       >
-        {{ appointment.speciality }} - {{ appointment.doctor_name }} -
-        {{ appointment.duration }}min - R$
-        {{ appointment.value.replace(".", ",") }}
+        {{ appointment.speciality }}
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <mat-form-field *ngIf="this.data.editing">
-    <mat-label>Selecione a data</mat-label>
-    <input [(ngModel)]="selectedDate" matInput [matDatepicker]="picker" />
-    <mat-hint>DD/MM/YYYY</mat-hint>
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
+  <mat-form-field>
+    <mat-label>Selecione o médico</mat-label>
+    <mat-select
+      [(ngModel)]="selectedDoctor"
+      name="doctor"
+      #doctor
+      [disabled]="!selectedDate"
+      (valueChange)="getDetailsAppointments($event)"
+    >
+      <mat-option *ngFor="let doctor of doctors" [value]="doctor">
+        {{ doctor.name }}
+      </mat-option>
+    </mat-select>
   </mat-form-field>
+
+  <div *ngIf="selectedDoctor">
+    <h3>Detalhes da consulta</h3>
+    <div class="appointment-details">
+      <span>Valor: R$ {{ detailsAppointment.value }}</span>
+      <span>Duração: {{ detailsAppointment.duration }} min</span>
+    </div>
+  </div>
 
   <button
     mat-raised-button

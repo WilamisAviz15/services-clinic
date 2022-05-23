@@ -22,6 +22,13 @@ export class AccountService {
     return this.http.post(`${environment.api}/`, req).pipe(take(1));
   }
 
+  register(user: User): Observable<any> {
+    const req = {
+      user: user,
+    };
+    return this.http.post(`${environment.api}/users/`, req).pipe(take(1));
+  }
+
   getToken(): string {
     const tokenLocalStorage = window.localStorage.getItem(
       'authorization-token'

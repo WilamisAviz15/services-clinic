@@ -7,7 +7,7 @@ class UserDatabase {
   private secret_token = process.env.TOKEN_SECRET;
   async findAllUsers(): Promise<User[]> {
     const query = `
-        SELECT uuid, username, user_type 
+        SELECT uuid, username, user_type, cpf, fullname
         FROM application_user
       `;
     const { rows } = await db.query<User>(query);
@@ -17,7 +17,7 @@ class UserDatabase {
   async findUserById(uuid: string): Promise<User> {
     try {
       const query = `
-        SELECT uuid, username, user_type 
+        SELECT uuid, username, user_type, cpf, fullname
         FROM application_user
         WHERE uuid = $1
       `;
@@ -35,9 +35,11 @@ class UserDatabase {
         INSERT INTO application_user (
             username,
             password,
-            user_type
+            user_type,
+            cpf,
+            fullname
         )
-        VALUES ($1, crypt($2, $3), $4)
+        VALUES ($1, crypt($2, $3), $4, $5, $6)
         RETURNING uuid
       `;
     const values = [
@@ -45,6 +47,8 @@ class UserDatabase {
       user.password,
       this.secret_token,
       user.user_type,
+      user.cpf,
+      user.fullname,
     ];
     const { rows } = await db.query<{ uuid: string }>(script, values);
     const [newUser] = rows;
@@ -57,14 +61,18 @@ class UserDatabase {
         SET
             username = $1,
             password = crypt($2, $3),
-            user_type = $4
-        WHERE uuid = $5
+            user_type = $4,
+            cpf = $5,
+            fullname = $6
+        WHERE uuid = $7
       `;
     const values = [
       user.username,
       user.password,
       this.secret_token,
       user.user_type,
+      user.cpf,
+      user.fullname,
       user.uuid,
     ];
     await db.query(script, values);

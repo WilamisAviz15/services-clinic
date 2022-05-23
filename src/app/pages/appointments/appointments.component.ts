@@ -22,8 +22,6 @@ export class AppointmentsComponent implements OnInit {
     'speciality',
     'date',
     'doctor',
-    'used',
-    'paid',
     'actions',
   ];
   constructor(
@@ -38,10 +36,8 @@ export class AppointmentsComponent implements OnInit {
 
   ngOnInit(): void {
     const token = this.accountService.getToken();
-    console.log('token:', token);
     const currentUser = window.localStorage.getItem('username');
     if (currentUser) {
-      console.log('current', currentUser);
       combineLatest([
         this.accountService.getUser(currentUser),
         this.dialogAppointmentService.getAllAppointments(),
@@ -49,11 +45,9 @@ export class AppointmentsComponent implements OnInit {
         .pipe(takeUntil(this.destroy$))
         .subscribe(([user, appointments]) => {
           this.user = user[0];
-          console.log(this.user);
           const filtereAppointments = appointments.filter(
             (a) => a.user_id == this.user.uuid
           );
-          console.log(filtereAppointments);
           this.appointments = new MatTableDataSource(filtereAppointments);
         });
     }
